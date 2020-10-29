@@ -72,7 +72,7 @@ void ecx_initialize(int xclr_pin, int xcs_pin, int pwrctl_pin) {
   digitalWrite(xclr, LOW);
   digitalWrite(xcs, HIGH);
   digitalWrite(pwrctl, LOW);
-  delay(16); // bleh arbitrary
+  delay(16); // arbitrary
   digitalWrite(xclr, HIGH);
   delay(16); // Spec 16ms from XCLR high to ready in powersave mode
   ecx_spi_write8_burst(ECX337A_INIT_STANDARD, sizeof(ECX337A_INIT_STANDARD));
@@ -99,6 +99,7 @@ void ecx_paneloff() {
     0x004C,
   };
   ecx_spi_write16_seq(seq, 2);
+  delay(16); // arbitrary
   digitalWrite(pwrctl, LOW); // Turn off OLED 10V rail and LVDS TX
 }
 
