@@ -26,16 +26,16 @@ uint8_t ECX337A_INIT_STANDARD[] = {
 };
 
 void ecx_spi_begin() {
-  digitalWrite(xcs, LOW);
-  delayMicroseconds(200);
   // Clock idles high, change data on falling edge
   SPI.beginTransaction(SPISettings(100000, LSBFIRST, SPI_MODE3));
+  digitalWrite(xcs, LOW);
+  delayMicroseconds(200);
 }
 
 void ecx_spi_end() {
-  SPI.endTransaction();
   delayMicroseconds(200);
   digitalWrite(xcs, HIGH);
+  SPI.endTransaction();
   delayMicroseconds(200); // don't want it to think we're bursting
 }
 
