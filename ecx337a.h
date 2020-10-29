@@ -12,6 +12,8 @@
 int xclr;
 int xcs;
 
+int pwrctl; // Use for powerdown on both 10V boost and LVDS TX (low = off)
+
 uint8_t ECX337A_INIT_STANDARD[] = {
   0x01, // First value following is at addr 0x01, and ascending from there
   0x02, // T_SLOPE default, YCB_P default, CALSEL default, LVDS_MAP VESA, MCLKPOL negative
@@ -34,7 +36,7 @@ void ecx_spi_end() {
   SPI.endTransaction();
   delayMicroseconds(200);
   digitalWrite(xcs, HIGH);
-  delayMicroseconds(200); // arbitrary, don't want it to think we're bursting
+  delayMicroseconds(200); // don't want it to think we're bursting
 }
 
 /**
@@ -63,11 +65,13 @@ void ecx_spi_write16_seq(uint16_t *data, int len) {
 /*
  * Release XCLR and write to "Normal" and "Side A" registers
  */
-void ecx_initialize(int xclr_pin, int xcs_pin) {
+void ecx_initialize(int xclr_pin, int xcs_pin, int pwrctl_pin) {
   xclr = xclr_pin;
   xcs = xcs_pin;
+  pwrctl = pwrctl_pin;
   digitalWrite(xclr, LOW);
   digitalWrite(xcs, HIGH);
+  digitalWrite(pwrctl, LOW);
   delay(16); // bleh arbitrary
   digitalWrite(xclr, HIGH);
   delay(16); // Spec 16ms from XCLR high to ready in powersave mode
@@ -78,12 +82,12 @@ void ecx_initialize(int xclr_pin, int xcs_pin) {
  * Disable PS0/PS1 powersave modes
  */
 void ecx_panelon() {
-  uint16_t seq[1];
-  seq[0] = 0x004D;
-  ecx_spi_write16_seq(seq, 1);
-  delayMicroseconds(200); // Spec
-  seq[0] = 0x004F;
-  ecx_spi_write16_seq(seq, 1);
+  digitalWrite(pwrctl, HIGH); // Turn on OLED 10V rail and LVDS TX
+  uint16_t seq[] = {
+    0x004D,
+    0x004F,
+  };
+  ecx_spi_write16_seq(seq, 2);
 }
 
 /*
@@ -95,6 +99,7 @@ void ecx_paneloff() {
     0x004C,
   };
   ecx_spi_write16_seq(seq, 2);
+  digitalWrite(pwrctl, LOW); // Turn off OLED 10V rail and LVDS TX
 }
 
 /*
