@@ -83,6 +83,7 @@ void ecx_initialize(int xclr_pin, int xcs_pin, int pwrctl_pin) {
  */
 void ecx_panelon() {
   digitalWrite(pwrctl, HIGH); // Turn on OLED 10V rail and LVDS TX
+  delay(16); // arbitrary
   uint16_t seq[] = {
     0x004D,
     0x004F,
