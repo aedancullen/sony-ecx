@@ -75,6 +75,16 @@ void ecx_initialize(int xclr_pin, int xcs_pin, int pwrctl_pin) {
   delay(16); // arbitrary
   digitalWrite(xclr, HIGH);
   delay(16); // Spec 16ms from XCLR high to ready in powersave mode
+  
+  // Debug: scope SO pin (1.8v) and watch for 0x56 LSB-first (01101010)
+  uint16_t seq[] = {
+    0x8001, // RD_ON enable
+    0x817F, // RD_ADDR 0x7F
+    0x8100,
+  };
+  ecx_spi_write16_seq(seq, 3);
+
+  // Write settings
   ecx_spi_write8_burst(ECX337A_INIT_STANDARD, sizeof(ECX337A_INIT_STANDARD));
 }
 
