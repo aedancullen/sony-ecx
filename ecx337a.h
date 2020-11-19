@@ -1,4 +1,3 @@
-#include <SPI.h>
 
 /*
  * Basic SPI routines for Sony ECX337A OLED microdisplay
@@ -9,9 +8,10 @@
 #ifndef ECX_H
 #define ECX_H
 
+int si;
+int clk;
 int xclr;
 int xcs;
-
 int pwrctl; // Use for powerdown on both 10V boost and LVDS TX (low = off)
 
 uint8_t ECX337A_INIT_STANDARD[] = {
@@ -26,8 +26,6 @@ uint8_t ECX337A_INIT_STANDARD[] = {
 };
 
 void ecx_spi_begin() {
-  // Clock idles high, change data on falling edge
-  SPI.beginTransaction(SPISettings(100000, LSBFIRST, SPI_MODE3));
   digitalWrite(xcs, LOW);
   delayMicroseconds(200);
 }
@@ -35,8 +33,17 @@ void ecx_spi_begin() {
 void ecx_spi_end() {
   delayMicroseconds(200);
   digitalWrite(xcs, HIGH);
-  SPI.endTransaction();
   delayMicroseconds(200); // don't want it to think we're bursting
+}
+
+void ecx_shift(uint8_t data) {
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(si, !!(data & (1 << i)));
+    delayMicroseconds(5);
+    digitalWrite(clk, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(clk, LOW);
+  }
 }
 
 /**
@@ -45,7 +52,7 @@ void ecx_spi_end() {
 void ecx_spi_write8_burst(uint8_t *data, int len) {
   ecx_spi_begin();
   for (int i = 0; i < len; i++) {
-    SPI.transfer(data[i]);
+    ecx_shift(data[i]);
   }
   ecx_spi_end();
 }
@@ -56,8 +63,8 @@ void ecx_spi_write8_burst(uint8_t *data, int len) {
 void ecx_spi_write16_seq(uint16_t *data, int len) {
   for (int i = 0; i < len; i++) {
     ecx_spi_begin();
-    SPI.transfer((uint8_t)(data[i] >> 8));
-    SPI.transfer((uint8_t)(data[i] & 0x00FF));
+    ecx_shift((uint8_t)(data[i] >> 8));
+    ecx_shift((uint8_t)(data[i] & 0x00FF));
     ecx_spi_end();
   }
 }
@@ -65,10 +72,14 @@ void ecx_spi_write16_seq(uint16_t *data, int len) {
 /*
  * Release XCLR and write to "Normal" and "Side A" registers
  */
-void ecx_initialize(int xclr_pin, int xcs_pin, int pwrctl_pin) {
+void ecx_initialize(int si_pin, int clk_pin, int xclr_pin, int xcs_pin, int pwrctl_pin) {
+  si = si_pin;
+  clk = clk_pin;
   xclr = xclr_pin;
   xcs = xcs_pin;
   pwrctl = pwrctl_pin;
+  digitalWrite(si, LOW);
+  digitalWrite(clk, LOW);
   digitalWrite(xclr, LOW);
   digitalWrite(xcs, HIGH);
   digitalWrite(pwrctl, LOW);
@@ -80,9 +91,10 @@ void ecx_initialize(int xclr_pin, int xcs_pin, int pwrctl_pin) {
   uint16_t seq[] = {
     0x8001, // RD_ON enable
     0x817F, // RD_ADDR 0x7F
-    0x8100,
+    0x8100, // read
+    0x8000, // RD_ON disable
   };
-  ecx_spi_write16_seq(seq, 3);
+  ecx_spi_write16_seq(seq, 4);
 
   // Write settings
   ecx_spi_write8_burst(ECX337A_INIT_STANDARD, sizeof(ECX337A_INIT_STANDARD));
@@ -92,7 +104,7 @@ void ecx_initialize(int xclr_pin, int xcs_pin, int pwrctl_pin) {
  * Disable PS0/PS1 powersave modes
  */
 void ecx_panelon() {
-  digitalWrite(pwrctl, HIGH); // Turn on OLED 10V rail and LVDS TX
+  digitalWrite(pwrctl, HIGH);
   delay(16); // arbitrary
   uint16_t seq[] = {
     0x004D,
@@ -111,7 +123,7 @@ void ecx_paneloff() {
   };
   ecx_spi_write16_seq(seq, 2);
   delay(16); // arbitrary
-  digitalWrite(pwrctl, LOW); // Turn off OLED 10V rail and LVDS TX
+  digitalWrite(pwrctl, LOW);
 }
 
 /*
