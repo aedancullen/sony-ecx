@@ -16,13 +16,13 @@ int pwrctl; // Use for powerdown on both 10V boost and LVDS TX (low = off)
 
 uint8_t ECX337A_INIT_STANDARD[] = {
   0x01, // First value following is at addr 0x01, and ascending from there
-  0x02, // T_SLOPE default, YCB_P default, CALSEL default, LVDS_MAP VESA, MCLKPOL negative
+  0x00, // T_SLOPE default, YCB_P default, CALSEL default, LVDS_MAP default, MCLKPOL default
   0x00, // ORBIT_H default
   0x80, // ORBIT_V default
   0x03, // PN_POL A=P/B=N, PINSWP ascending/ascending, PRTSWP IF0,IF1, IFSW 4lane-x2
-  0x08, // FORMAT_SEL_DATA 4:4:4, DITHEREN enabled
-  0x00, // VD_POL negative, HD_POL negative, OTPCALDAC_REGEN 0, OTPDG_REGEN 0
-  0x10, // VD_FILTER 1MCLK, HD_FILTER 1MCLK, C_SLOPE "prompt transition"
+  0x08, // FORMAT_SEL_DATA default, DITHEREN default
+  0x00, // VD_POL default, HD_POL default, OTPCALDAC_REGEN default, OTPDG_REGEN default
+  0x10, // VD_FILTER default, HD_FILTER default, C_SLOPE default
 };
 
 void ecx_spi_begin() {
