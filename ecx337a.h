@@ -22,7 +22,7 @@ uint8_t ECX337A_INIT_STANDARD[] = {
   0x03, // PN_POL A=P/B=N, PINSWP ascending/ascending, PRTSWP IF0,IF1, IFSW 4lane-x2
   0x08, // FORMAT_SEL_DATA default, DITHEREN default
   0x00, // VD_POL default, HD_POL default, OTPCALDAC_REGEN default, OTPDG_REGEN default
-  0x10, // VD_FILTER default, HD_FILTER default, C_SLOPE default
+  0xD0, // VD_FILTER 3MCLK, HD_FILTER 3MCLK, C_SLOPE default
 };
 
 void ecx_spi_begin() {
