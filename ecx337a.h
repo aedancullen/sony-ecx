@@ -1,8 +1,7 @@
 
 /*
  * Basic SPI routines for Sony ECX337A OLED microdisplay
- * 
- * LVDS serializer example: ROHM BU90T82 on pigvision PVS114T1 testbed board
+ * Copyright (c) 2020 Pigvision Research
  */
 
 #ifndef ECX_H
