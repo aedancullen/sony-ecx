@@ -45,7 +45,7 @@ void ecx_shift(uint8_t data) {
   }
 }
 
-/**
+/*
  * Single burst-mode transaction
  */
 void ecx_spi_write8_burst(uint8_t *data, int len) {
@@ -56,7 +56,7 @@ void ecx_spi_write8_burst(uint8_t *data, int len) {
   ecx_spi_end();
 }
 
-/**
+/*
  * Multiple single-register transactions
  */
 void ecx_spi_write16_seq(uint16_t *data, int len) {
@@ -139,7 +139,7 @@ void ecx_luminance(uint8_t nitsx10) {
   ecx_spi_write16_seq(seq, 2);
 }
 
-/**
+/*
  * Set image orbit position; each axis has 10 pixels of orbit
  * space in either direction (for alleviating image retention)
  */
