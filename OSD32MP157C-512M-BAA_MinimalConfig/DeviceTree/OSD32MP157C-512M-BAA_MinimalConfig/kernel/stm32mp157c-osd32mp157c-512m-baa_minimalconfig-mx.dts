@@ -200,7 +200,7 @@
 					 <STM32_PINMUX('I', 9, ANALOG)>,
 					 <STM32_PINMUX('I', 10, ANALOG)>,
 					 <STM32_PINMUX('F', 10, ANALOG)>,
-					 <STM32_PINMUX('G', 7, AF14)>;//e14 for brk test
+					 <STM32_PINMUX('G', 7, ANALOG)>;//e14 for brk test
 		};
 	};
 
