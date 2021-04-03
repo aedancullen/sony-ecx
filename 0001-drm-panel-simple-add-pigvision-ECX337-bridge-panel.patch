@@ -1,7 +1,7 @@
 From 51e5599f8444d3380bd973d95ffb1eae90e3af50 Mon Sep 17 00:00:00 2001
 From: Aedan Cullen <aedan@pig.vision>
 Date: Sat, 7 Nov 2020 23:59:49 -0600
-Subject: [PATCH] drm/panel-simple: add pigvision ECX337A bridge panel
+Subject: [PATCH] drm/panel-simple: add pigvision ECX337 bridge panel
 
 Signed-off-by: Aedan Cullen <aedan@pig.vision>
 ---
@@ -16,7 +16,7 @@ index 8abb31f83..b391e9fa5 100644
  	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
  };
  
-+static const struct drm_display_mode pigvision_ecx337a_rgb565_bridge_mode = {
++static const struct drm_display_mode pigvision_ecx337_rgb_bridge_mode = {
 +	.clock = 81000, // LVDS serializer example: ROHM BU90T82 on pigvision PVS114T1 testbed board
 +	.hdisplay = 1280,
 +	.hsync_start = 1280 + 38,
@@ -30,8 +30,8 @@ index 8abb31f83..b391e9fa5 100644
 +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 +};
 +
-+static const struct panel_desc pigvision_ecx337a_rgb565_bridge = {
-+	.modes = &pigvision_ecx337a_rgb565_bridge_mode,
++static const struct panel_desc pigvision_ecx337_rgb_bridge = {
++	.modes = &pigvision_ecx337_rgb_bridge_mode,
 +	.num_modes = 1,
 +	.bpc = 6,
 +	.size = {
@@ -49,8 +49,8 @@ index 8abb31f83..b391e9fa5 100644
  		.compatible = "ampire,am-480272h3tmqw-t01h",
  		.data = &ampire_am_480272h3tmqw_t01h,
 +	}, {
-+		.compatible = "pigvision,ecx337a-rgb565-bridge",
-+		.data = &pigvision_ecx337a_rgb565_bridge,
++		.compatible = "pigvision,ecx337-rgb-bridge",
++		.data = &pigvision_ecx337_rgb_bridge,
  	}, {
  		.compatible = "ampire,am800480r3tmqwa1h",
  		.data = &ampire_am800480r3tmqwa1h,
