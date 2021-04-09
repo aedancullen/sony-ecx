@@ -115,14 +115,16 @@ void ecx_panelon() {
 /*
  * Enable PS0/PS1 powersave modes
  */
-void ecx_paneloff() {
+void ecx_paneloff(bool poweroff) {
   uint16_t seq[] = {
     0x004D,
     0x004C,
   };
   ecx_spi_write16_seq(seq, 2);
-  delay(16); // arbitrary
-  digitalWrite(pwrctl, LOW);
+  if (poweroff) {
+    delay(16); // arbitrary
+    digitalWrite(pwrctl, LOW);
+  }
 }
 
 /*
