@@ -272,7 +272,7 @@
 		pins1 {
 			u-boot,dm-pre-reloc;
 			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
-			bias-disable;
+			bias-pull-up; // MOD was disable
 		};
 		pins2 {
 			u-boot,dm-pre-reloc;
@@ -671,7 +671,7 @@
 	status = "okay";
 
 	/* USER CODE BEGIN sdmmc1 */
-  cd-gpios = <&gpiod 0 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;//g7 for brk test
+  cd-gpios = <&gpioa 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>; // MOD altered, g7 for brk test
   disable-wp;
   st,neg-edge;
   bus-width = <4>;
@@ -699,7 +699,7 @@
 	/* USER CODE END uart4 */
 };
 
-&usbh_ehci{
+&usbh_ehci{ // MOD USB stuff
 	status = "okay";
 
 	/* USER CODE BEGIN usbh_ehci */

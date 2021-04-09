@@ -98,7 +98,7 @@
 	uart4_pins_mx: uart4_mx-0 {
 		pins1 {
 			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
-			bias-disable;
+			bias-pull-up; // MOD was disable
 		};
 		pins2 {
 			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
@@ -192,7 +192,7 @@
 		CLK_LPTIM1_DISABLED
 		CLK_LPTIM23_DISABLED
 		CLK_LPTIM45_DISABLED
-	>;
+	>; // MOD copied LTDC 81MHz PLL settings
 	pll1:st,pll@0 {
 		compatible = "st,stm32mp1-pll";
 		reg = <0>;
