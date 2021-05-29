@@ -1,7 +1,7 @@
 
 /*
  * Basic SPI routines for Sony ECX337A OLED microdisplay
- * Copyright (c) 2020 Pigvision Research
+ * Copyright (c) 2020-2021 Aedan Cullen <aedan@pig.vision>
  */
 
 #ifndef ECX_H
